@@ -1,0 +1,10 @@
+# Goal
+geometry_msgs/Point[] trajectory
+---
+# Result
+bool success
+---
+# Feedback
+float64 error_distance
+int32 current_step
+int32 total_steps
