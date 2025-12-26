@@ -59,7 +59,7 @@ class PickPlaceSupervisor:
         # We throttle the log to avoid flooding the terminal (e.g., every 0.5s)
         # feedback.state is "MOVING" or "FINE_TUNING"
         # feedback.dist_to_goal is the distance in meters
-        rospy.loginfo_throttle(0.5, f"Status: {feedback.state} | Dist: {feedback.dist_to_goal:.4f}m")
+        rospy.loginfo_throttle(0.5, f"Status: {feedback.state} | Dist: {feedback.error_distance:.4f}m")
 
     def run_mission(self):
         # you need to know where the robot initial pose is. 
@@ -97,6 +97,40 @@ class PickPlaceSupervisor:
 
         rospy.loginfo("MISSION COMPLETE!")
 
+    def run_mission_direct(self):
+        # you need to know where the robot initial pose is. 
+        # for the very first move, we assume we are at Home (0,0) or read you have read tf 
+        current_pose = self.home_pose  
+
+        for i, obj_loc in enumerate(self.objects):
+            rospy.loginfo(f"PROCESSING OBJECT {i+1} (DIRECT MODE)")
+            
+            # go to object (from wherever we are)
+            if self.move_robot(current_pose, obj_loc):
+                rospy.loginfo("Reached Object. GRIPPING (5s wait)")
+                rospy.sleep(5.0) # Simulate gripping time
+                current_pose = obj_loc
+            else:
+                rospy.logerr("Failed to reach object. Aborting.")
+                return
+
+            # go directly to drop zone
+            if self.move_robot(current_pose, self.drop_zone):
+                rospy.loginfo("Reached Drop Zone. RELEASING...")
+                rospy.sleep(5.0)
+                current_pose = self.drop_zone
+            else:
+                rospy.logerr("Failed to reach drop zone. Aborting.")
+                return
+            
+            # loop continues, next start point is drop_zone
+
+        # final return home
+        rospy.loginfo("All objects placed. Returning Home.")
+        self.move_robot(current_pose, self.home_pose)
+        rospy.loginfo("MISSION COMPLETE!")
+
 if __name__ == '__main__':
     supervisor = PickPlaceSupervisor()
-    supervisor.run_mission()
+    # supervisor.run_mission()
+    supervisor.run_mission_direct()

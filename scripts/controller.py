@@ -26,7 +26,7 @@ ACTUATION_RATE_LIMIT = 0.6
 
 # --- TOLERANCES ---
 TRANSITION_TOLERANCE = 0.010  # 1cm: Switch NN -> PID
-SUCCESS_TOLERANCE    = 0.005  # 2mm: Switch PID -> Success (Done)
+SUCCESS_TOLERANCE    = 0.002  # 2mm: Switch PID -> Success (Done)
 
 # PID GAINS
 PID_KP = -20.0  
@@ -138,7 +138,7 @@ class IK_Action_Server:
                 if raw:
                     curr_dist = np.linalg.norm(np.array(raw[2:4]) - self.final_target_phys)
 
-            feedback.dist_to_goal = curr_dist
+            feedback.error_distance = curr_dist
             feedback.state = self.control_mode
             self._as.publish_feedback(feedback)
             
