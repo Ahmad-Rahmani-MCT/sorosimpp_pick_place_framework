@@ -132,5 +132,5 @@ class PickPlaceSupervisor:
 
 if __name__ == '__main__':
     supervisor = PickPlaceSupervisor()
-    # supervisor.run_mission()
-    supervisor.run_mission_direct()
+    supervisor.run_mission()
+    #supervisor.run_mission_direct()
