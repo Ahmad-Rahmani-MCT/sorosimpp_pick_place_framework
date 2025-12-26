@@ -2,7 +2,7 @@
 import rospy
 import numpy as np
 from geometry_msgs.msg import Point
-from sorosimpp_controller.srv import GetTrajectory, GetTrajectoryResponse
+from sorosimpp_pick_place_framework.srv import GetTrajectory, GetTrajectoryResponse
 
 def lin_path_gen(start, goal, n_steps): 
     # linear interpolation

@@ -6,5 +6,4 @@ bool success
 ---
 # Feedback
 float64 error_distance
-int32 current_step
-int32 total_steps
+string state #"moving" or "fine tuning"

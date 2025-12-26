@@ -2,10 +2,13 @@
 import rospy
 import actionlib
 from geometry_msgs.msg import Point
-from sorosimpp_controller.msg import ExecuteTrajectoryAction, ExecuteTrajectoryGoal
-from sorosimpp_controller.srv import GetTrajectory
+from sorosimpp_pick_place_framework.msg import ExecuteTrajectoryAction, ExecuteTrajectoryGoal # action message types
+from sorosimpp_pick_place_framework.srv import GetTrajectory # service messsage types
 
-class PickPlaceSupervisor:
+# this node is a client to the service and action server 
+# service for getting the path 
+# action for the control to the desired pose
+class PickPlaceSupervisor: 
     def __init__(self):
         rospy.init_node('supervisor_node')
         
@@ -37,7 +40,7 @@ class PickPlaceSupervisor:
                 return False
             
             # sending path to controller
-            goal = ExecuteTrajectoryGoal()
+            goal = ExecuteTrajectoryGoal() # creating trajectory goal message type
             goal.trajectory = resp.trajectory
             
             rospy.loginfo(f"Sending Goal: Move to ({end.x:.2f}, {end.y:.2f})")
@@ -53,7 +56,10 @@ class PickPlaceSupervisor:
 
     def feedback_callback(self, feedback):
         # Optional: Print progress bars [TO BE MODIFIED]
-        pass
+        # We throttle the log to avoid flooding the terminal (e.g., every 0.5s)
+        # feedback.state is "MOVING" or "FINE_TUNING"
+        # feedback.dist_to_goal is the distance in meters
+        rospy.loginfo_throttle(0.5, f"Status: {feedback.state} | Dist: {feedback.dist_to_goal:.4f}m")
 
     def run_mission(self):
         # you need to know where the robot initial pose is. 
