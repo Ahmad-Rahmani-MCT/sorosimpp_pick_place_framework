@@ -1,0 +1,8 @@
+# Request
+geometry_msgs/Point start
+geometry_msgs/Point goal
+int32 num_steps
+---
+# Response
+geometry_msgs/Point[] trajectory
+bool success
