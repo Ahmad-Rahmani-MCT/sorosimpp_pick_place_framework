@@ -1,0 +1,7 @@
+<launch>
+  <node name="motion_planner" pkg="sorosimpp_pick_place_framework" type="path_planner.py" output="screen" />
+
+  <node name="ik_controller" pkg="sorosimpp_pick_place_framework" type="controller.py" output="screen" />
+
+  <node name="supervisor" pkg="sorosimpp_pick_place_framework" type="supervisor.py" output="screen" />
+</launch>
